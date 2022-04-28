@@ -31,12 +31,19 @@ header {
 .display {
     grid-column: span 4;
     display: flex;
-    justify-content: end;
-    align-items: center;
-    height: 1.5em;
+    flex-direction: column;
+    justify-content: center;
+    align-items: end;
+    height: 2em;
     border: .1em solid black;
     margin-bottom: 1em;
     padding: .2em;
-    
+}
 
+.computation-display {
+    font-size: .5rem;
+}
+
+.operand-display {
+    font-size: 1.5rem;
 }

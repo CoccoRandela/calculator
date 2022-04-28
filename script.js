@@ -34,41 +34,37 @@ function operate (a, operator, b) {
     }
 }
 
-const display = document.querySelector('.display');
-display.textContent = 0;
-const numberButtons = document.querySelectorAll('.number');
-const clearButton = document.querySelector('.clear-button');
-const operatorButtons = document.querySelectorAll('.operator');
-const equalButton = document.querySelector('.equal');
 
-// display clicked numbers
+const numberButtons = document.querySelectorAll('.number'),
+clearButton = document.querySelector('.clear-button'),
+operatorButtons = document.querySelectorAll('.operator'),
+equalButton = document.querySelector('.equal');
+
+const display = document.querySelector('.display'),
+operandDisplay = document.querySelector('.operand-display'),
+computationDisplay = document.querySelector('.computation-display');
+
+let currentOperand = 0,
+firstOperand = 0,
+secondOperand = null,
+operator = 0;
+
+operandDisplay.textContent = currentOperand;
+
+
 numberButtons.forEach(b => {
-    b.addEventListener ('click', () => {
-        if (display.textContent === '0') {
-            display.textContent = b.textContent;  
-        } else {
-        display.textContent += b.textContent;
-        }
+    b.addEventListener('click', () => {
+        computationDisplay.textContent += b.textContent;
+        currentOperand = Number(currentOperand + b.textContent);
+        operandDisplay.textContent = currentOperand;
     })
-})
-
-clearButton.addEventListener('click', () => {
-    display.textContent = '0';
 })
 
 operatorButtons.forEach(b => {
-    b.addEventListener ('click', () => {
-        let firstOperand = Number(display.textContent),
-            operator = b.textContent;
-        display.textContent += b.textContent;
-        return firstOperandAndOperator = [firstOperand, operator];
+    b.addEventListener('click', () => {
+        computationDisplay.textContent += b.textContent;
+        return firstOperand = currentOperand,
+        currentOperand = 0,
+        operator = b.textContent;    
     })
-})
-
-equalButton.addEventListener('click', () => {
-    console.log(firstOperandAndOperator)
-    let array = display.textContent.split(firstOperandAndOperator[1]);
-    let secondOperand = Number(array[1]);
-    console.log(...firstOperandAndOperator);
-    display.textContent = operate(...firstOperandAndOperator, secondOperand);
 })
