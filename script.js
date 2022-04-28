@@ -44,27 +44,33 @@ const display = document.querySelector('.display'),
 operandDisplay = document.querySelector('.operand-display'),
 computationDisplay = document.querySelector('.computation-display');
 
-let currentOperand = 0,
-firstOperand = 0,
+let currentOperand = null,
+firstOperand = null,
 secondOperand = null,
-operator = 0;
+operator = null;
 
-operandDisplay.textContent = currentOperand;
+operandDisplay.textContent = Number(currentOperand);
 
 
 numberButtons.forEach(b => {
     b.addEventListener('click', () => {
         computationDisplay.textContent += b.textContent;
-        currentOperand = Number(currentOperand + b.textContent);
+        currentOperand = Number(Number(currentOperand) + b.textContent);
         operandDisplay.textContent = currentOperand;
+        if (operator) return secondOperand = currentOperand;
     })
 })
 
 operatorButtons.forEach(b => {
     b.addEventListener('click', () => {
+        if (secondOperand || secondOperand === 0) {
+            currentOperand = operate(firstOperand, operator, secondOperand);
+            operandDisplay.textContent = currentOperand;
+        }
         computationDisplay.textContent += b.textContent;
         return firstOperand = currentOperand,
         currentOperand = 0,
         operator = b.textContent;    
     })
 })
+
