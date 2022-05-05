@@ -52,7 +52,8 @@ clearButton = document.querySelector('.clear-button'),
 operatorButtons = document.querySelectorAll('.operator'),
 squareButton = document.querySelector('.square'),
 equalButton = document.querySelector('.equal'),
-signButton = document.querySelector('.sign');
+signButton = document.querySelector('.sign'),
+floatButton = document.querySelector('.float');
 
 const display = document.querySelector('.display'),
 operandDisplay = document.querySelector('.operand-display'),
@@ -73,7 +74,11 @@ numberButtons.forEach(b => {
             computationDisplay.textContent =  currentOperand;
         }
         computationDisplay.textContent += b.textContent;
-        currentOperand = Number(Number(currentOperand) + b.textContent);
+        if (operandDisplay.textContent.endsWith('.')) {
+            currentOperand = Number(Number(currentOperand) + '.' + b.textContent)
+        } else {
+            currentOperand = Number(Number(currentOperand) + b.textContent);
+        }
         operandDisplay.textContent = currentOperand;
         if (operator) secondOperand = currentOperand;
     })
@@ -140,4 +145,11 @@ signButton.addEventListener('click', () => {
         }
     }
     if (operator) secondOperand = currentOperand;
+})
+
+floatButton.addEventListener('click', () => {
+    operandDisplay.textContent += floatButton.textContent;
+    computationDisplay.textContent += floatButton.textContent;
+    currentOperand = operandDisplay.textContent;
+
 })
