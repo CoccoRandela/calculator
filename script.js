@@ -1,7 +1,5 @@
 // -------------------------------- //
 
-
-
 function add(a, b) {
     return a + b;
 }
@@ -48,21 +46,6 @@ function operate (a, operator, b) {
     }
 }
 
-
-
-// -------------------------------- //
-
-
-// Add listeners to buttons
-
-const numberButtons = document.querySelectorAll('.number');
-const clearButton = document.querySelector('.clear-button')
-const operatorButtons = document.querySelectorAll('.operator')
-const squareButton = document.querySelector('.square')
-const equalButton = document.querySelector('.equal')
-const floatButton = document.querySelector('.float');
-
-
 const display = document.querySelector('.display');
 const operandDisplay = document.querySelector('.operand-display');
 const computationDisplay = document.querySelector('.computation-display');
@@ -75,58 +58,51 @@ let result = null;
 
 operandDisplay.textContent = Number(currentOperand);
 
-numberButtons.forEach(b => {
-    b.addEventListener('click', () => {
+
+
+function addNumbers(b) {
+    if (computationDisplay.textContent.includes('=')) {
+        computationDisplay.textContent =  currentOperand;
+    }
+    computationDisplay.textContent += b.textContent;
+    if (operandDisplay.textContent.endsWith('.')) {
+        currentOperand = Number(Number(currentOperand) + '.' + b.textContent)
+    } else {
+        currentOperand = Number(Number(currentOperand) + b.textContent);
+    }
+    operandDisplay.textContent = currentOperand;
+    if (operator) secondOperand = currentOperand;
+}
+
+function selectOperator(b) {
+    if (currentOperand) {
         if (computationDisplay.textContent.includes('=')) {
             computationDisplay.textContent =  currentOperand;
         }
+        if (secondOperand || secondOperand === 0) {
+            currentOperand = operate(firstOperand, operator, secondOperand);
+            operandDisplay.textContent = currentOperand;
+        }
         computationDisplay.textContent += b.textContent;
-        if (operandDisplay.textContent.endsWith('.')) {
-            currentOperand = Number(Number(currentOperand) + '.' + b.textContent)
-        } else {
-            currentOperand = Number(Number(currentOperand) + b.textContent);
-        }
-        if (operandDisplay.textContent.includes('√')) {
-            operandDisplay.textContent = `√${currentOperand}`;
-        } else {
-        operandDisplay.textContent = currentOperand;
-        }
-        if (operator) secondOperand = currentOperand;
-    })
-})
+        firstOperand = currentOperand;
+        currentOperand = null;
+        operator = b.textContent; 
+    } else {
+        operator = b.textContent;
+        computationDisplay.textContent = computationDisplay.textContent.slice(0, -1) + b.textContent;
+    }
+}
 
-operatorButtons.forEach(b => {
-    b.addEventListener('click', () => {
-        if (currentOperand) {
-            if (computationDisplay.textContent.includes('=')) {
-                computationDisplay.textContent =  currentOperand;
-            }
-            if (secondOperand || secondOperand === 0) {
-                currentOperand = operate(firstOperand, operator, secondOperand);
-                operandDisplay.textContent = currentOperand;
-            }
-            computationDisplay.textContent += b.textContent;
-            firstOperand = currentOperand;
-            currentOperand = null;
-            operator = b.textContent; 
-        }else {
-            operator = b.textContent;
-            computationDisplay.textContent.replace
-            computationDisplay.textContent = computationDisplay.textContent.slice(0, -1) + b.textContent;
-        }
-    })
-})
-
-clearButton.addEventListener('click', () => {
+function clearAll() {
     currentOperand = null;
     operandDisplay.textContent = Number(currentOperand);
     computationDisplay.textContent =  '';
     firstOperand = null;
     secondOperand = null;
     operator = null;
-})
+}
 
-equalButton.addEventListener('click', () => {
+function getResult(equalButton) {
     if (secondOperand || secondOperand === 0) {
         let result = operate(firstOperand, operator, secondOperand);
         operandDisplay.textContent = result; 
@@ -136,10 +112,23 @@ equalButton.addEventListener('click', () => {
         secondOperand = null;
         operator = null;
     }
-})
+}
 
-floatButton.addEventListener('click', () => {
+function makeFloat(floatButton) {
     operandDisplay.textContent += floatButton.textContent;
     computationDisplay.textContent += floatButton.textContent;
     currentOperand = operandDisplay.textContent;
-})
+}
+
+function returnSquare() {
+    const square = Math.sqrt(operandDisplay.textContent);
+    computationDisplay.textContent = computationDisplay.textContent.slice(0, -operandDisplay.textContent.length) + square;
+    currentOperand = square;
+    operandDisplay.textContent = currentOperand;
+    if (operator) secondOperand = currentOperand;
+}
+
+
+// -------------------------------- //
+
+
