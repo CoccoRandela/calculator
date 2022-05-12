@@ -1,5 +1,7 @@
+// -------------------------------- //
 
-// math functions
+
+
 function add(a, b) {
     return a + b;
 }
@@ -47,26 +49,31 @@ function operate (a, operator, b) {
 }
 
 
-const numberButtons = document.querySelectorAll('.number'),
-clearButton = document.querySelector('.clear-button'),
-operatorButtons = document.querySelectorAll('.operator'),
-squareButton = document.querySelector('.square'),
-equalButton = document.querySelector('.equal'),
-signButton = document.querySelector('.sign'),
-floatButton = document.querySelector('.float');
 
-const display = document.querySelector('.display'),
-operandDisplay = document.querySelector('.operand-display'),
-computationDisplay = document.querySelector('.computation-display');
+// -------------------------------- //
 
-let currentOperand = null,
-firstOperand = null,
-secondOperand = null,
-operator = null;
-result = null;
+
+// Add listeners to buttons
+
+const numberButtons = document.querySelectorAll('.number');
+const clearButton = document.querySelector('.clear-button')
+const operatorButtons = document.querySelectorAll('.operator')
+const squareButton = document.querySelector('.square')
+const equalButton = document.querySelector('.equal')
+const floatButton = document.querySelector('.float');
+
+
+const display = document.querySelector('.display');
+const operandDisplay = document.querySelector('.operand-display');
+const computationDisplay = document.querySelector('.computation-display');
+
+let currentOperand = null;
+let firstOperand = null;
+let secondOperand = null;
+let operator = null;
+let result = null;
 
 operandDisplay.textContent = Number(currentOperand);
-
 
 numberButtons.forEach(b => {
     b.addEventListener('click', () => {
@@ -79,24 +86,34 @@ numberButtons.forEach(b => {
         } else {
             currentOperand = Number(Number(currentOperand) + b.textContent);
         }
+        if (operandDisplay.textContent.includes('√')) {
+            operandDisplay.textContent = `√${currentOperand}`;
+        } else {
         operandDisplay.textContent = currentOperand;
+        }
         if (operator) secondOperand = currentOperand;
     })
 })
 
 operatorButtons.forEach(b => {
     b.addEventListener('click', () => {
-        if (computationDisplay.textContent.includes('=')) {
-            computationDisplay.textContent =  currentOperand;
+        if (currentOperand) {
+            if (computationDisplay.textContent.includes('=')) {
+                computationDisplay.textContent =  currentOperand;
+            }
+            if (secondOperand || secondOperand === 0) {
+                currentOperand = operate(firstOperand, operator, secondOperand);
+                operandDisplay.textContent = currentOperand;
+            }
+            computationDisplay.textContent += b.textContent;
+            firstOperand = currentOperand;
+            currentOperand = null;
+            operator = b.textContent; 
+        }else {
+            operator = b.textContent;
+            computationDisplay.textContent.replace
+            computationDisplay.textContent = computationDisplay.textContent.slice(0, -1) + b.textContent;
         }
-        if (secondOperand || secondOperand === 0) {
-            currentOperand = operate(firstOperand, operator, secondOperand);
-            operandDisplay.textContent = currentOperand;
-        }
-        computationDisplay.textContent += b.textContent;
-        firstOperand = currentOperand;
-        currentOperand = null;
-        operator = b.textContent;    
     })
 })
 
@@ -121,35 +138,8 @@ equalButton.addEventListener('click', () => {
     }
 })
 
-signButton.addEventListener('click', () => {
-    if (currentOperand) {
-        if (currentOperand > 0) {
-            computationDisplay.textContent = computationDisplay.textContent.slice(0, -currentOperand.toString().length)
-            currentOperand = subtract(currentOperand, currentOperand*2);
-            operandDisplay.textContent = currentOperand;
-            computationDisplay.textContent += `(${currentOperand})`;
-        } else if (currentOperand < 0) {
-            computationDisplay.textContent = computationDisplay.textContent.slice(0, -currentOperand.toString().length-2)
-            currentOperand = subtract(currentOperand, currentOperand*2)
-            operandDisplay.textContent = currentOperand;
-            operandDisplay.textContent = currentOperand;
-            computationDisplay.textContent += currentOperand;
-        }
-    } else {
-        if (firstOperand > 0) {
-            firstOperand = subtract(firstOperand, firstOperand*2);
-            operandDisplay.textContent = firstOperand;
-        } else if (firstOperand < 0) {
-            firstOperand = subtract(currentOperand, currentOperand*2)
-            operandDisplay.textContent = firstOperand;
-        }
-    }
-    if (operator) secondOperand = currentOperand;
-})
-
 floatButton.addEventListener('click', () => {
     operandDisplay.textContent += floatButton.textContent;
     computationDisplay.textContent += floatButton.textContent;
     currentOperand = operandDisplay.textContent;
-
 })
