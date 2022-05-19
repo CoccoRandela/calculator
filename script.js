@@ -25,6 +25,13 @@ function expo (a, b) {
     return result;
 }
 
+function returnSquare() {
+    const square = Math.sqrt(operandDisplay.textContent);
+    computationDisplay.textContent = computationDisplay.textContent.slice(0, -operandDisplay.textContent.length) + square;
+    currentOperand = square;
+    operandDisplay.textContent = currentOperand;
+    if (operator) secondOperand = currentOperand;
+}
 
 function operate (a, operator, b) {
     switch(operator) {
@@ -37,7 +44,7 @@ function operate (a, operator, b) {
         case '*':
             return multiply(a, b);
             break;
-        case '÷':
+        case '/':
             return divide(a, b);
             break;
         case 'ˆ':
@@ -64,11 +71,11 @@ function addNumbers(b) {
     if (computationDisplay.textContent.includes('=')) {
         computationDisplay.textContent =  currentOperand;
     }
-    computationDisplay.textContent += b.textContent;
+    computationDisplay.textContent += b;
     if (operandDisplay.textContent.endsWith('.')) {
-        currentOperand = Number(Number(currentOperand) + '.' + b.textContent)
+        currentOperand = Number(Number(currentOperand) + '.' + b)
     } else {
-        currentOperand = Number(Number(currentOperand) + b.textContent);
+        currentOperand = Number(Number(currentOperand) + b);
     }
     operandDisplay.textContent = currentOperand;
     if (operator) secondOperand = currentOperand;
@@ -83,13 +90,13 @@ function selectOperator(b) {
             currentOperand = operate(firstOperand, operator, secondOperand);
             operandDisplay.textContent = currentOperand;
         }
-        computationDisplay.textContent += b.textContent;
+        computationDisplay.textContent += b;
         firstOperand = currentOperand;
         currentOperand = null;
-        operator = b.textContent; 
+        operator = b; 
     } else {
-        operator = b.textContent;
-        computationDisplay.textContent = computationDisplay.textContent.slice(0, -1) + b.textContent;
+        operator = b;
+        computationDisplay.textContent = computationDisplay.textContent.slice(0, -1) + b;
     }
 }
 
@@ -120,15 +127,34 @@ function makeFloat(floatButton) {
     currentOperand = operandDisplay.textContent;
 }
 
-function returnSquare() {
-    const square = Math.sqrt(operandDisplay.textContent);
-    computationDisplay.textContent = computationDisplay.textContent.slice(0, -operandDisplay.textContent.length) + square;
-    currentOperand = square;
-    operandDisplay.textContent = currentOperand;
-    if (operator) secondOperand = currentOperand;
+function isOperator(key) {
+    const operators = document.querySelectorAll('.operator');
+    for (let i=0; i<operators.length; i++) {
+        if (operators[i].textContent === key) return true;
+    }
+    return false;
 }
+
+
 
 
 // -------------------------------- //
 
 
+document.addEventListener('keydown', (e) => {
+    if(!isNaN(Number(e.key))) {
+        addNumbers(e.key);
+    };
+    if (isOperator(e.key)) {
+        selectOperator(e.key);
+    }
+    if (e.key === 'Enter') {
+        getResult(document.querySelector('.equal'));
+    }
+    if (e.key === '.') {
+        makeFloat(document.querySelector('.float'));
+    }
+    if (e.key ==='Backspace') {
+        clearAll(document.querySelector('.clear-all'))
+    }
+})
