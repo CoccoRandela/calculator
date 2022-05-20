@@ -26,9 +26,8 @@ h1 {
     border: .1em solid black;
     border-radius: 2em;
     padding: 2em;
-    min-width: 60%;
+    min-width: 50vw;
     background-color: rgb(104, 103, 103);
-
 }
 
  
@@ -76,7 +75,7 @@ button.operator, button.square {
 .computation-display {
     font-style: italic;
     font-size: 1rem;
-    height: 25%;
+    height: 1em;
     margin-bottom: .7em;
 }
 

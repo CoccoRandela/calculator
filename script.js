@@ -13,7 +13,7 @@ function multiply (a, b) {
 }
 
 function divide (a, b) {
-    if (b === 0) return 'Cannot divide by 0';
+    if (b === 0) return 'Nope';
     else return a/b; 
 }
 
@@ -26,7 +26,7 @@ function expo (a, b) {
 }
 
 function returnSquare() {
-    const square = Math.sqrt(operandDisplay.textContent);
+    const square = Number(Math.sqrt(operandDisplay.textContent).toFixed(2));
     computationDisplay.textContent = computationDisplay.textContent.slice(0, -operandDisplay.textContent.length) + square;
     currentOperand = square;
     operandDisplay.textContent = currentOperand;
@@ -82,13 +82,20 @@ function addNumbers(b) {
 }
 
 function selectOperator(b) {
-    if (currentOperand) {
+    if (currentOperand || currentOperand === 0) {
         if (computationDisplay.textContent.includes('=')) {
             computationDisplay.textContent =  currentOperand;
         }
         if (secondOperand || secondOperand === 0) {
             currentOperand = operate(firstOperand, operator, secondOperand);
+            if (currentOperand.toString().includes('.')) {
+                currentOperand = Number(currentOperand.toFixed(2));
+            }
             operandDisplay.textContent = currentOperand;
+            if (currentOperand === 'Nope') {
+                currentOperand = 0;
+                computationDisplay.textContent = 0;
+            }
         }
         computationDisplay.textContent += b;
         firstOperand = currentOperand;
@@ -112,8 +119,16 @@ function clearAll() {
 function getResult(equalButton) {
     if (secondOperand || secondOperand === 0) {
         let result = operate(firstOperand, operator, secondOperand);
+        if (result.toString().includes('.')) {
+            result = Number(result.toFixed(2));
+        }
         operandDisplay.textContent = result; 
-        computationDisplay.textContent = computationDisplay.textContent + equalButton.textContent + result;
+        if (result === 'Nope') {
+            result = 0;
+            computationDisplay.textContent = 0;
+        } else {
+            computationDisplay.textContent = computationDisplay.textContent + equalButton.textContent + result;
+        }
         currentOperand = result;
         firstOperand = null;
         secondOperand = null;
